@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import CheckConstraint, Q, F
 
 from books.models import Books
+from city_library_project.settings import AUTH_USER_MODEL
 
 
 class Borrowing(models.Model):
