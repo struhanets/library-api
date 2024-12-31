@@ -7,8 +7,8 @@ from city_library_project.settings import AUTH_USER_MODEL
 
 class Borrowing(models.Model):
     borrow_date = models.DateField(auto_now_add=True)
-    expected_return_date = models.DateField(null=True, blank=True)
-    actual_return_date = models.DateField()
+    expected_return_date = models.DateField()
+    actual_return_date = models.DateField(null=True, blank=True)
     book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name="borrowings")
     user = models.ForeignKey(
         AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="customer"
@@ -17,7 +17,7 @@ class Borrowing(models.Model):
     class Meta:
         constraints = [
             CheckConstraint(
-                condition=Q(actual_return_date__lte=F("expected_return_date")),
+                condition=Q(actual_return_date__gt=F("borrow_date")) & Q(expected_return_date__gt=F("borrow_date")),
                 name="correct_return_date",
             ),
         ]
