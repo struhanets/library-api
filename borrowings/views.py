@@ -4,7 +4,8 @@ from rest_framework import permissions
 from rest_framework.generics import RetrieveAPIView
 
 from borrowings.models import Borrowing
-from borrowings.serializers import BorrowingSerializer, BorrowingCreateSerializer, BorrowingRetrieveSerializer
+from borrowings.serializers import BorrowingSerializer, BorrowingCreateSerializer, BorrowingRetrieveSerializer, \
+    BorrowingReturnSerializer
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
@@ -49,3 +50,13 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 class BorrowingsRetrieveView(generics.RetrieveUpdateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingRetrieveSerializer
+
+    def perform_update(self, serializer):
+        borrowing = serializer.save()
+
+        if borrowing.actual_return_date:
+            borrowing.book.inventory += 1
+            borrowing.book.save()
+
+
+
