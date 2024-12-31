@@ -47,3 +47,12 @@ class BorrowingCreateSerializer(BorrowingSerializer):
         borrowing = Borrowing.objects.create(**validated_data)
 
         return borrowing
+
+
+class BorrowingRetrieveSerializer(BorrowingSerializer):
+    book = serializers.SlugRelatedField(slug_field="title", read_only=True)
+    user = serializers.SlugRelatedField(slug_field="last_name", read_only=True)
+
+    class Meta:
+        model = Borrowing
+        fields = ("id", "book", "user", "borrow_date", "expected_return_date", "actual_return_date",)
