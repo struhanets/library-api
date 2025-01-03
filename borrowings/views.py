@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics
 
 from borrowings.models import Borrowing
@@ -10,6 +11,11 @@ from borrowings.serializers import (
 from borrowings.teleg_bot import send_telegram_message
 
 
+@extend_schema(
+    tags=["Borrowings"],
+    description="Endpoints to manage borrowing option is library system. "
+    "You can create and list data or filter by user_id and user_status parameters.",
+)
 class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
@@ -55,7 +61,29 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
         send_telegram_message(message)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name="user_id", type=int, description="filter by user_id"),
+            OpenApiParameter(
+                name="user_status",
+                type=bool,
+                description="filter by parameter user_is_active",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """
+        List a queryset.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
 
+
+@extend_schema(
+    tags=["Borrowings"],
+    description="Endpoints to manage the borrowing functionality in the library "
+    "system allow you to update borrowing records, "
+    "set the actual_return_date parameter, and return borrowed books to the inventory.",
+)
 class BorrowingsRetrieveView(generics.RetrieveUpdateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingRetrieveSerializer
