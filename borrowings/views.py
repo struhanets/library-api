@@ -75,7 +75,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         """
         List a queryset.
         """
-        queryset = self.filter_queryset(self.get_queryset())
+        return super().list(request, *args, **kwargs)
 
 
 @extend_schema(
