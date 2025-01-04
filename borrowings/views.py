@@ -57,9 +57,10 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         borrowing = serializer.save()
 
         message = (
-            "New borrowing create ",
-            f"user: {borrowing.user.first_name} {borrowing.user.last_name} ",
-            f"By books: {borrowing.book.title}" f"In date: {borrowing.borrow_date}",
+            "New borrowing create "
+            f"user: {borrowing.user.first_name} {borrowing.user.last_name} "
+            f"By books: {borrowing.book.title} "
+            f"In date: {borrowing.borrow_date}"
         )
 
         send_telegram_message(message)
