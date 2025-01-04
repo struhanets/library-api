@@ -64,3 +64,17 @@ class BorrowingRetrieveSerializer(BorrowingSerializer):
             "expected_return_date",
             "actual_return_date",
         )
+        read_only_fields = ("id", "actual_return_date")
+
+
+class BorrowingReturnSerializer(BorrowingRetrieveSerializer):
+    class Meta:
+        model = Borrowing
+        fields = (
+            "id",
+            "book",
+            "user",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+        )
