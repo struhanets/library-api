@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "books",
     "borrowings",
     "rest_framework",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -140,10 +141,26 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "City Library API",
+    "DESCRIPTION": "Library is a user-friendly platform designed to manage library resources, "
+    "enabling efficient book search, borrowing, and catalog management for both "
+    "users and administrators.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+        "defaultModelRendering": "model",
+    },
 }
