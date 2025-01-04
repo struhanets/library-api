@@ -1,11 +1,13 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticated
 
 from borrowings.models import Borrowing
 from borrowings.serializers import (
     BorrowingSerializer,
     BorrowingCreateSerializer,
     BorrowingRetrieveSerializer,
+    BorrowingReturnSerializer,
 )
 
 from borrowings.teleg_bot import send_telegram_message
@@ -19,6 +21,7 @@ from borrowings.teleg_bot import send_telegram_message
 class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -84,9 +87,10 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     "system allow you to update borrowing records, "
     "set the actual_return_date parameter, and return borrowed books to the inventory.",
 )
-class BorrowingsRetrieveView(generics.RetrieveUpdateAPIView):
+class BorrowingsReturnView(generics.RetrieveUpdateAPIView):
     queryset = Borrowing.objects.all()
-    serializer_class = BorrowingRetrieveSerializer
+    serializer_class = BorrowingReturnSerializer
+    permission_classes = (IsAuthenticated,)
 
     def perform_update(self, serializer):
         borrowing = serializer.save()
@@ -94,3 +98,9 @@ class BorrowingsRetrieveView(generics.RetrieveUpdateAPIView):
         if borrowing.actual_return_date:
             borrowing.book.inventory += 1
             borrowing.book.save()
+
+
+class BorrowingsRetrieveView(generics.RetrieveUpdateAPIView):
+    queryset = Borrowing.objects.all()
+    serializer_class = BorrowingRetrieveSerializer
+    permission_classes = (IsAuthenticated,)
